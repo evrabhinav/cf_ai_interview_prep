@@ -1,0 +1,26 @@
+{
+  "name": "cf-ai-interview-prep",
+  "version": "1.0.0",
+  "description": "AI-powered interview preparation app built with Cloudflare Workers AI and D1",
+  "main": "src/worker.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create interview_prep_db",
+    "db:init": "wrangler d1 execute interview_prep_db --local --file=./schema.sql",
+    "db:init:remote": "wrangler d1 execute interview_prep_db --remote --file=./schema.sql",
+    "db:studio": "wrangler d1 studio interview_prep_db"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "ai",
+    "interview",
+    "preparation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  }
+}

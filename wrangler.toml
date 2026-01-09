@@ -1,0 +1,17 @@
+name = "cf-ai-interview-prep"
+main = "src/worker.js"
+compatibility_date = "2024-12-01"
+
+# Workers AI binding
+[ai]
+binding = "AI"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "interview_prep_db"
+database_id = "27a7c049-b782-4ec0-b83c-aef1628a828c"
+
+# Static assets (frontend)
+[assets]
+directory = "./frontend"

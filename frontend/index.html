@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Interview Prep</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0f0f1a;
+      --bg-secondary: #1a1a2e;
+      --bg-tertiary: #252540;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --accent-color: #667eea;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+      --border-color: #333355;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      background: var(--accent-gradient);
+      border-radius: 20px;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      position: relative;
+    }
+
+    /* Navigation tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .nav-tab {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .nav-tab:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .nav-tab.active {
+      background: var(--accent-gradient);
+      color: white;
+    }
+
+    /* Views */
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    /* Role Selection */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .role-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-color);
+      border-radius: 15px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .role-card:hover {
+      border-color: var(--accent-color);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    }
+
+    .role-card.selected {
+      border-color: var(--accent-color);
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+    }
+
+    .role-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .role-name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    /* Difficulty Selector */
+    .difficulty-section {
+      margin-bottom: 30px;
+    }
+
+    .difficulty-section h3 {
+      margin-bottom: 15px;
+      color: var(--text-secondary);
+    }
+
+    .difficulty-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .difficulty-btn {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .difficulty-btn:hover {
+      border-color: var(--accent-color);
+    }
+
+    .difficulty-btn.selected {
+      border-color: var(--accent-color);
+      background: var(--accent-gradient);
+    }
+
+    .difficulty-btn.easy.selected { background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; }
+    .difficulty-btn.medium.selected { background: linear-gradient(135deg, #f59e0b, #d97706); border-color: #f59e0b; }
+    .difficulty-btn.hard.selected { background: linear-gradient(135deg, #ef4444, #dc2626); border-color: #ef4444; }
+
+    /* Start Button */
+    .start-btn {
+      width: 100%;
+      padding: 18px;
+      background: var(--accent-gradient);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 20px;
+    }
+
+    .start-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .start-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Chat Interface */
+    .chat-container {
+      background: var(--bg-secondary);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 70vh;
+    }
+
+    .chat-header {
+      background: var(--bg-tertiary);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .chat-header-info h3 {
+      font-size: 1rem;
+      margin-bottom: 3px;
+    }
+
+    .chat-header-info span {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .end-session-btn {
+      padding: 8px 16px;
+      background: var(--error-color);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .end-session-btn:hover {
+      background: #dc2626;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 15px 20px;
+      border-radius: 18px;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.assistant {
+      background: var(--bg-tertiary);
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+    }
+
+    .message.user {
+      background: var(--accent-gradient);
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+    }
+
+    .message.system {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+      border: 1px solid var(--success-color);
+      align-self: center;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 5px;
+      padding: 15px 20px;
+      background: var(--bg-tertiary);
+      border-radius: 18px;
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+    }
+
+    .typing-indicator span {
+      width: 8px;
+      height: 8px;
+      background: var(--text-secondary);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+
+    .chat-input-container {
+      padding: 15px 20px;
+      background: var(--bg-tertiary);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 15px 20px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 25px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .chat-input:focus {
+      border-color: var(--accent-color);
+    }
+
+    .chat-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .send-btn {
+      padding: 15px 25px;
+      background: var(--accent-gradient);
+      border: none;
+      border-radius: 25px;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .send-btn:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Feedback Card */
+    .feedback-card {
+      background: var(--bg-tertiary);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 10px;
+      border-left: 4px solid var(--accent-color);
+    }
+
+    .feedback-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .score-badge {
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 5px 15px;
+      border-radius: 20px;
+      background: var(--bg-secondary);
+    }
+
+    .score-badge.high { color: var(--success-color); }
+    .score-badge.medium { color: var(--warning-color); }
+    .score-badge.low { color: var(--error-color); }
+
+    .feedback-section {
+      margin-bottom: 15px;
+    }
+
+    .feedback-section h4 {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .feedback-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .feedback-list li {
+      background: var(--bg-secondary);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .feedback-list.strengths li {
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+    }
+
+    .feedback-list.improvements li {
+      border: 1px solid var(--warning-color);
+      color: var(--warning-color);
+    }
+
+    .feedback-text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* Session Summary */
+    .session-summary {
+      background: var(--bg-secondary);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .summary-score {
+      font-size: 4rem;
+      font-weight: bold;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .summary-label {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .summary-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 20px 0;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .summary-feedback {
+      background: var(--bg-tertiary);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .summary-feedback h3 {
+      margin-bottom: 10px;
+    }
+
+    .new-session-btn {
+      margin-top: 20px;
+      padding: 15px 40px;
+      background: var(--accent-gradient);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .new-session-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    /* History View */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .history-item {
+      background: var(--bg-secondary);
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 1px solid var(--border-color);
+    }
+
+    .history-item:hover {
+      border-color: var(--accent-color);
+      transform: translateX(5px);
+    }
+
+    .history-info h4 {
+      margin-bottom: 5px;
+    }
+
+    .history-meta {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      display: flex;
+      gap: 15px;
+    }
+
+    .history-score {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    /* Progress View */
+    .progress-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .progress-card {
+      background: var(--bg-secondary);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .progress-role {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .progress-best {
+      background: var(--accent-gradient);
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+    }
+
+    .progress-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .progress-stat {
+      background: var(--bg-tertiary);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .progress-stat-value {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+
+    .progress-stat-label {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Voice Controls */
+    .voice-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .mic-btn {
+      background: var(--bg-primary);
+      border: 2px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .mic-btn:hover {
+      border-color: var(--accent-color);
+      background: var(--bg-tertiary);
+    }
+
+    .mic-btn.recording {
+      background: var(--error-color);
+      border-color: var(--error-color);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    }
+
+    .speaker-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      width: 35px;
+      height: 35px;
+      font-size: 1.1rem;
+      padding: 0;
+      margin-left: 5px;
+    }
+
+    .speaker-btn:hover {
+      color: var(--accent-color);
+    }
+
+    .speaker-btn.speaking {
+      color: var(--accent-color);
+      animation: speakPulse 1s infinite;
+    }
+
+    @keyframes speakPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .message-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      max-width: 80%;
+    }
+
+    .message-wrapper.assistant {
+      align-self: flex-start;
+    }
+
+    .message-wrapper.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .message-wrapper .message {
+      max-width: 100%;
+    }
+
+    .voice-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 15px;
+      background: var(--bg-tertiary);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .voice-status.recording {
+      color: var(--error-color);
+      border: 1px solid var(--error-color);
+    }
+
+    .voice-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--error-color);
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .auto-speak-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 15px;
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle-switch.active {
+      background: var(--accent-color);
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .toggle-switch.active::after {
+      transform: translateX(20px);
+    }
+
+    .voice-not-supported {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid var(--error-color);
+      color: var(--error-color);
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.8rem; }
+      .role-grid { grid-template-columns: repeat(2, 1fr); }
+      .chat-container { height: 65vh; }
+      .message { max-width: 90%; }
+      .message-wrapper { max-width: 90%; }
+      .summary-stats { flex-direction: column; gap: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>AI Interview Prep</h1>
+      <p>Practice interviews with AI and get instant feedback</p>
+    </header>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-view="practice">Practice</button>
+      <button class="nav-tab" data-view="history">History</button>
+      <button class="nav-tab" data-view="progress">Progress</button>
+    </nav>
+
+    <!-- Practice View -->
+    <div id="practice-view" class="view active">
+      <!-- Role Selection -->
+      <div id="setup-section">
+        <h2 style="margin-bottom: 20px;">Select Interview Type</h2>
+        <div class="role-grid" id="role-grid"></div>
+
+        <div class="difficulty-section">
+          <h3>Select Difficulty</h3>
+          <div class="difficulty-buttons">
+            <button class="difficulty-btn easy" data-difficulty="easy">Easy</button>
+            <button class="difficulty-btn medium selected" data-difficulty="medium">Medium</button>
+            <button class="difficulty-btn hard" data-difficulty="hard">Hard</button>
+          </div>
+        </div>
+
+        <button class="start-btn" id="start-btn" disabled>Start Interview</button>
+      </div>
+
+      <!-- Chat Section -->
+      <div id="chat-section" style="display: none;">
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="chat-header-info">
+              <h3 id="chat-role-title">Interview Session</h3>
+              <span id="chat-difficulty-badge">Medium</span>
+            </div>
+            <button class="end-session-btn" id="end-session-btn">End Session</button>
+          </div>
+          <div class="chat-messages" id="chat-messages"></div>
+          <div id="voice-status-container"></div>
+          <div class="chat-input-container">
+            <button class="voice-btn mic-btn" id="mic-btn" title="Click to speak">🎤</button>
+            <input type="text" class="chat-input" id="chat-input" placeholder="Type or click mic to speak..." />
+            <button class="send-btn" id="send-btn">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Summary -->
+      <div id="summary-section" style="display: none;">
+        <div class="session-summary">
+          <div class="summary-score" id="summary-score">0</div>
+          <div class="summary-label">Overall Score</div>
+          <div class="summary-stats">
+            <div class="stat">
+              <div class="stat-value" id="summary-questions">0</div>
+              <div class="stat-label">Questions</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value" id="summary-duration">0m</div>
+              <div class="stat-label">Duration</div>
+            </div>
+          </div>
+          <div class="summary-feedback">
+            <h3>Feedback</h3>
+            <p id="summary-feedback-text"></p>
+          </div>
+          <button class="new-session-btn" id="new-session-btn">Start New Session</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- History View -->
+    <div id="history-view" class="view">
+      <h2 style="margin-bottom: 20px;">Session History</h2>
+      <div class="history-list" id="history-list">
+        <div class="empty-state">
+          <div class="empty-state-icon">📚</div>
+          <p>No sessions yet. Start practicing!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress View -->
+    <div id="progress-view" class="view">
+      <h2 style="margin-bottom: 20px;">Your Progress</h2>
+      <div class="progress-grid" id="progress-grid">
+        <div class="empty-state">
+          <div class="empty-state-icon">📈</div>
+          <p>Complete some sessions to see your progress!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let state = {
+      userId: localStorage.getItem('userId') || generateUserId(),
+      selectedRole: null,
+      selectedDifficulty: 'medium',
+      currentSession: null,
+      sessionStartTime: null,
+      roles: [],
+    };
+
+    // Save userId
+    localStorage.setItem('userId', state.userId);
+
+    function generateUserId() {
+      return 'user_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // API calls
+    const api = {
+      async getRoles() {
+        const res = await fetch('/api/roles');
+        return res.json();
+      },
+      async startSession(role, difficulty) {
+        const res = await fetch('/api/session/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: state.userId, role, difficulty }),
+        });
+        return res.json();
+      },
+      async sendMessage(sessionId, message) {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId, message }),
+        });
+        return res.json();
+      },
+      async endSession(sessionId) {
+        const res = await fetch('/api/session/end', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId }),
+        });
+        return res.json();
+      },
+      async getHistory() {
+        const res = await fetch(`/api/history?userId=${state.userId}`);
+        return res.json();
+      },
+      async getProgress() {
+        const res = await fetch(`/api/progress?userId=${state.userId}`);
+        return res.json();
+      },
+    };
+
+    // DOM Elements
+    const roleGrid = document.getElementById('role-grid');
+    const startBtn = document.getElementById('start-btn');
+    const setupSection = document.getElementById('setup-section');
+    const chatSection = document.getElementById('chat-section');
+    const summarySection = document.getElementById('summary-section');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const endSessionBtn = document.getElementById('end-session-btn');
+    const newSessionBtn = document.getElementById('new-session-btn');
+
+    // Initialize
+    async function init() {
+      try {
+        const data = await api.getRoles();
+        state.roles = data.roles;
+        renderRoles();
+        setupEventListeners();
+      } catch (error) {
+        console.error('Failed to initialize:', error);
+      }
+    }
+
+    function renderRoles() {
+      roleGrid.innerHTML = state.roles.map(role => `
+        <div class="role-card" data-role="${role.id}">
+          <div class="role-icon">${role.icon}</div>
+          <div class="role-name">${role.name}</div>
+        </div>
+      `).join('');
+    }
+
+    function setupEventListeners() {
+      // Role selection
+      roleGrid.addEventListener('click', (e) => {
+        const card = e.target.closest('.role-card');
+        if (card) {
+          document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          state.selectedRole = card.dataset.role;
+          updateStartButton();
+        }
+      });
+
+      // Difficulty selection
+      document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.selectedDifficulty = btn.dataset.difficulty;
+        });
+      });
+
+      // Start button
+      startBtn.addEventListener('click', startSession);
+
+      // Send message
+      sendBtn.addEventListener('click', sendMessage);
+      chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+      });
+
+      // End session
+      endSessionBtn.addEventListener('click', endSession);
+
+      // New session
+      newSessionBtn.addEventListener('click', () => {
+        summarySection.style.display = 'none';
+        setupSection.style.display = 'block';
+        state.currentSession = null;
+      });
+
+      // Navigation tabs
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+          document.getElementById(`${tab.dataset.view}-view`).classList.add('active');
+
+          if (tab.dataset.view === 'history') loadHistory();
+          if (tab.dataset.view === 'progress') loadProgress();
+        });
+      });
+    }
+
+    function updateStartButton() {
+      startBtn.disabled = !state.selectedRole;
+    }
+
+    async function startSession() {
+      startBtn.disabled = true;
+      startBtn.innerHTML = '<span class="loading-spinner"></span> Starting...';
+
+      try {
+        const data = await api.startSession(state.selectedRole, state.selectedDifficulty);
+        state.currentSession = data.sessionId;
+        state.sessionStartTime = Date.now();
+
+        const role = state.roles.find(r => r.id === state.selectedRole);
+        document.getElementById('chat-role-title').textContent = `${role.icon} ${role.name} Interview`;
+        document.getElementById('chat-difficulty-badge').textContent = state.selectedDifficulty.charAt(0).toUpperCase() + state.selectedDifficulty.slice(1);
+
+        chatMessages.innerHTML = '';
+        addMessage('assistant', data.message);
+
+        setupSection.style.display = 'none';
+        chatSection.style.display = 'block';
+      } catch (error) {
+        console.error('Failed to start session:', error);
+        alert('Failed to start session. Please try again.');
+      }
+
+      startBtn.disabled = false;
+      startBtn.textContent = 'Start Interview';
+    }
+
+    function addMessage(role, content, evaluation = null) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role}`;
+      messageDiv.textContent = content;
+      chatMessages.appendChild(messageDiv);
+
+      if (evaluation && evaluation.score > 0) {
+        const feedbackDiv = document.createElement('div');
+        feedbackDiv.className = 'feedback-card';
+
+        const scoreClass = evaluation.score >= 7 ? 'high' : evaluation.score >= 5 ? 'medium' : 'low';
+
+        feedbackDiv.innerHTML = `
+          <div class="feedback-header">
+            <span>Your Response</span>
+            <span class="score-badge ${scoreClass}">${evaluation.score}/10</span>
+          </div>
+          ${evaluation.strengths?.length ? `
+            <div class="feedback-section">
+              <h4>Strengths</h4>
+              <ul class="feedback-list strengths">
+                ${evaluation.strengths.map(s => `<li>${s}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+          ${evaluation.improvements?.length ? `
+            <div class="feedback-section">
+              <h4>Areas to Improve</h4>
+              <ul class="feedback-list improvements">
+                ${evaluation.improvements.map(i => `<li>${i}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+          ${evaluation.feedback ? `
+            <div class="feedback-section">
+              <h4>Feedback</h4>
+              <p class="feedback-text">${evaluation.feedback}</p>
+            </div>
+          ` : ''}
+        `;
+        chatMessages.appendChild(feedbackDiv);
+      }
+
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'typing-indicator';
+      typingDiv.id = 'typing-indicator';
+      typingDiv.innerHTML = '<span></span><span></span><span></span>';
+      chatMessages.appendChild(typingDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typing-indicator');
+      if (indicator) indicator.remove();
+    }
+
+    async function sendMessage() {
+      const message = chatInput.value.trim();
+      if (!message || !state.currentSession) return;
+
+      chatInput.value = '';
+      sendBtn.disabled = true;
+      chatInput.disabled = true;
+
+      addMessage('user', message);
+      addTypingIndicator();
+
+      try {
+        const data = await api.sendMessage(state.currentSession, message);
+        removeTypingIndicator();
+        addMessage('assistant', data.message, data.evaluation);
+      } catch (error) {
+        removeTypingIndicator();
+        console.error('Failed to send message:', error);
+        addMessage('system', 'Failed to get response. Please try again.');
+      }
+
+      sendBtn.disabled = false;
+      chatInput.disabled = false;
+      chatInput.focus();
+    }
+
+    async function endSession() {
+      endSessionBtn.disabled = true;
+      endSessionBtn.innerHTML = '<span class="loading-spinner"></span>';
+
+      try {
+        const data = await api.endSession(state.currentSession);
+
+        const duration = Math.round((Date.now() - state.sessionStartTime) / 60000);
+
+        document.getElementById('summary-score').textContent = data.overallScore || 0;
+        document.getElementById('summary-questions').textContent = data.questionsAnswered || 0;
+        document.getElementById('summary-duration').textContent = `${duration}m`;
+        document.getElementById('summary-feedback-text').textContent = data.feedback || 'No feedback available.';
+
+        chatSection.style.display = 'none';
+        summarySection.style.display = 'block';
+      } catch (error) {
+        console.error('Failed to end session:', error);
+        alert('Failed to end session. Please try again.');
+      }
+
+      endSessionBtn.disabled = false;
+      endSessionBtn.textContent = 'End Session';
+    }
+
+    async function loadHistory() {
+      const historyList = document.getElementById('history-list');
+      historyList.innerHTML = '<div class="loading-spinner"></div>';
+
+      try {
+        const data = await api.getHistory();
+
+        if (!data.sessions || data.sessions.length === 0) {
+          historyList.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">📚</div>
+              <p>No sessions yet. Start practicing!</p>
+            </div>
+          `;
+          return;
+        }
+
+        historyList.innerHTML = data.sessions.map(session => {
+          const role = state.roles.find(r => r.id === session.role);
+          const date = new Date(session.started_at).toLocaleDateString();
+          const scoreClass = session.overall_score >= 7 ? 'high' : session.overall_score >= 5 ? 'medium' : 'low';
+
+          return `
+            <div class="history-item">
+              <div class="history-info">
+                <h4>${role?.icon || '💼'} ${role?.name || session.role}</h4>
+                <div class="history-meta">
+                  <span>${date}</span>
+                  <span>${session.difficulty}</span>
+                  <span>${session.status}</span>
+                </div>
+              </div>
+              <div class="history-score score-badge ${scoreClass}">${session.overall_score || '-'}</div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Failed to load history:', error);
+        historyList.innerHTML = '<p>Failed to load history.</p>';
+      }
+    }
+
+    async function loadProgress() {
+      const progressGrid = document.getElementById('progress-grid');
+      progressGrid.innerHTML = '<div class="loading-spinner"></div>';
+
+      try {
+        const data = await api.getProgress();
+
+        if (!data.progress || data.progress.length === 0) {
+          progressGrid.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">📈</div>
+              <p>Complete some sessions to see your progress!</p>
+            </div>
+          `;
+          return;
+        }
+
+        progressGrid.innerHTML = data.progress.map(p => {
+          const role = state.roles.find(r => r.id === p.role);
+
+          return `
+            <div class="progress-card">
+              <div class="progress-header">
+                <span class="progress-role">${role?.icon || '💼'} ${role?.name || p.role}</span>
+                <span class="progress-best">Best: ${p.best_score}</span>
+              </div>
+              <div class="progress-stats">
+                <div class="progress-stat">
+                  <div class="progress-stat-value">${p.sessions_completed}</div>
+                  <div class="progress-stat-label">Sessions</div>
+                </div>
+                <div class="progress-stat">
+                  <div class="progress-stat-value">${p.average_score?.toFixed(1) || 0}</div>
+                  <div class="progress-stat-label">Avg Score</div>
+                </div>
+                <div class="progress-stat">
+                  <div class="progress-stat-value">${p.total_questions}</div>
+                  <div class="progress-stat-label">Questions</div>
+                </div>
+                <div class="progress-stat">
+                  <div class="progress-stat-value">${new Date(p.last_practice).toLocaleDateString()}</div>
+                  <div class="progress-stat-label">Last Practice</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Failed to load progress:', error);
+        progressGrid.innerHTML = '<p>Failed to load progress.</p>';
+      }
+    }
+
+    // ==================== VOICE FEATURES ====================
+
+    // Voice state
+    const voiceState = {
+      isRecording: false,
+      autoSpeak: true,
+      recognition: null,
+      synthesis: window.speechSynthesis,
+      isSupported: {
+        recognition: 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window,
+        synthesis: 'speechSynthesis' in window
+      }
+    };
+
+    // Initialize speech recognition
+    function initVoice() {
+      if (voiceState.isSupported.recognition) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        voiceState.recognition = new SpeechRecognition();
+        voiceState.recognition.continuous = false;
+        voiceState.recognition.interimResults = true;
+        voiceState.recognition.lang = 'en-US';
+
+        voiceState.recognition.onstart = () => {
+          voiceState.isRecording = true;
+          updateMicButton();
+          showVoiceStatus('Listening... Speak now');
+        };
+
+        voiceState.recognition.onresult = (event) => {
+          let finalTranscript = '';
+          let interimTranscript = '';
+
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += transcript;
+            } else {
+              interimTranscript += transcript;
+            }
+          }
+
+          // Show interim results in input
+          if (interimTranscript) {
+            chatInput.value = interimTranscript;
+            showVoiceStatus('Listening: ' + interimTranscript.substring(0, 30) + '...');
+          }
+
+          // When final, set the input value
+          if (finalTranscript) {
+            chatInput.value = finalTranscript;
+            hideVoiceStatus();
+          }
+        };
+
+        voiceState.recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          voiceState.isRecording = false;
+          updateMicButton();
+
+          if (event.error === 'no-speech') {
+            showVoiceStatus('No speech detected. Try again.', true);
+          } else if (event.error === 'not-allowed') {
+            showVoiceStatus('Microphone access denied. Please allow microphone.', true);
+          } else {
+            showVoiceStatus('Error: ' + event.error, true);
+          }
+
+          setTimeout(hideVoiceStatus, 3000);
+        };
+
+        voiceState.recognition.onend = () => {
+          voiceState.isRecording = false;
+          updateMicButton();
+
+          // Auto-send if we have text
+          const text = chatInput.value.trim();
+          if (text && state.currentSession) {
+            hideVoiceStatus();
+            sendMessage();
+          }
+        };
+      }
+
+      // Setup mic button
+      const micBtn = document.getElementById('mic-btn');
+      if (micBtn) {
+        if (!voiceState.isSupported.recognition) {
+          micBtn.disabled = true;
+          micBtn.title = 'Speech recognition not supported in this browser';
+          micBtn.style.opacity = '0.5';
+        } else {
+          micBtn.addEventListener('click', toggleRecording);
+        }
+      }
+    }
+
+    function toggleRecording() {
+      if (!voiceState.recognition) return;
+
+      if (voiceState.isRecording) {
+        voiceState.recognition.stop();
+      } else {
+        // Stop any ongoing speech
+        stopSpeaking();
+        chatInput.value = '';
+        try {
+          voiceState.recognition.start();
+        } catch (e) {
+          console.error('Failed to start recognition:', e);
+        }
+      }
+    }
+
+    function updateMicButton() {
+      const micBtn = document.getElementById('mic-btn');
+      if (micBtn) {
+        if (voiceState.isRecording) {
+          micBtn.classList.add('recording');
+          micBtn.innerHTML = '⏹️';
+          micBtn.title = 'Click to stop';
+        } else {
+          micBtn.classList.remove('recording');
+          micBtn.innerHTML = '🎤';
+          micBtn.title = 'Click to speak';
+        }
+      }
+    }
+
+    function showVoiceStatus(text, isError = false) {
+      const container = document.getElementById('voice-status-container');
+      if (container) {
+        container.innerHTML = `
+          <div class="voice-status ${isError ? '' : 'recording'}" style="margin: 10px 20px;">
+            ${!isError ? '<div class="voice-status-dot"></div>' : ''}
+            <span>${text}</span>
+          </div>
+        `;
+      }
+    }
+
+    function hideVoiceStatus() {
+      const container = document.getElementById('voice-status-container');
+      if (container) {
+        container.innerHTML = '';
+      }
+    }
+
+    // Text-to-Speech functions
+    function speak(text) {
+      if (!voiceState.isSupported.synthesis || !voiceState.autoSpeak) return;
+
+      // Stop any ongoing speech
+      stopSpeaking();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      // Try to use a natural voice
+      const voices = voiceState.synthesis.getVoices();
+      const preferredVoice = voices.find(v =>
+        v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Google'))
+      ) || voices.find(v => v.lang.startsWith('en'));
+
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+
+      utterance.onstart = () => {
+        document.querySelectorAll('.speaker-btn').forEach(btn => btn.classList.add('speaking'));
+      };
+
+      utterance.onend = () => {
+        document.querySelectorAll('.speaker-btn').forEach(btn => btn.classList.remove('speaking'));
+      };
+
+      voiceState.synthesis.speak(utterance);
+    }
+
+    function stopSpeaking() {
+      if (voiceState.synthesis) {
+        voiceState.synthesis.cancel();
+      }
+      document.querySelectorAll('.speaker-btn').forEach(btn => btn.classList.remove('speaking'));
+    }
+
+    function speakMessage(text, button) {
+      if (voiceState.synthesis.speaking) {
+        stopSpeaking();
+      } else {
+        // Temporarily enable autoSpeak for this message
+        const originalAutoSpeak = voiceState.autoSpeak;
+        voiceState.autoSpeak = true;
+        speak(text);
+        voiceState.autoSpeak = originalAutoSpeak;
+      }
+    }
+
+    // Override addMessage to include speaker button and auto-speak
+    const originalAddMessage = addMessage;
+    addMessage = function(role, content, evaluation = null) {
+      const messageWrapper = document.createElement('div');
+      messageWrapper.className = `message-wrapper ${role}`;
+
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role}`;
+      messageDiv.textContent = content;
+
+      messageWrapper.appendChild(messageDiv);
+
+      // Add speaker button for assistant messages
+      if (role === 'assistant' && voiceState.isSupported.synthesis) {
+        const speakerBtn = document.createElement('button');
+        speakerBtn.className = 'speaker-btn';
+        speakerBtn.innerHTML = '🔊';
+        speakerBtn.title = 'Read aloud';
+        speakerBtn.onclick = () => speakMessage(content, speakerBtn);
+        messageWrapper.appendChild(speakerBtn);
+
+        // Auto-speak AI responses
+        if (voiceState.autoSpeak) {
+          setTimeout(() => speak(content), 300);
+        }
+      }
+
+      chatMessages.appendChild(messageWrapper);
+
+      // Add feedback card if present
+      if (evaluation && evaluation.score > 0) {
+        const feedbackDiv = document.createElement('div');
+        feedbackDiv.className = 'feedback-card';
+
+        const scoreClass = evaluation.score >= 7 ? 'high' : evaluation.score >= 5 ? 'medium' : 'low';
+
+        feedbackDiv.innerHTML = `
+          <div class="feedback-header">
+            <span>Your Response</span>
+            <span class="score-badge ${scoreClass}">${evaluation.score}/10</span>
+          </div>
+          ${evaluation.strengths?.length ? `
+            <div class="feedback-section">
+              <h4>Strengths</h4>
+              <ul class="feedback-list strengths">
+                ${evaluation.strengths.map(s => `<li>${s}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+          ${evaluation.improvements?.length ? `
+            <div class="feedback-section">
+              <h4>Areas to Improve</h4>
+              <ul class="feedback-list improvements">
+                ${evaluation.improvements.map(i => `<li>${i}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+          ${evaluation.feedback ? `
+            <div class="feedback-section">
+              <h4>Feedback</h4>
+              <p class="feedback-text">${evaluation.feedback}</p>
+            </div>
+          ` : ''}
+        `;
+        chatMessages.appendChild(feedbackDiv);
+      }
+
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    // Load voices (they load asynchronously)
+    if (voiceState.isSupported.synthesis) {
+      speechSynthesis.onvoiceschanged = () => {
+        voiceState.synthesis.getVoices();
+      };
+    }
+
+    // Initialize voice features
+    initVoice();
+
+    // Initialize app
+    init();
+  </script>
+</body>
+</html>
